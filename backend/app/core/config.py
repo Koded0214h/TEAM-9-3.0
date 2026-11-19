@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     refresh_token_days: int = 7
     bootstrap_admin_email: str | None = None
     bootstrap_admin_password: str | None = None
+    geoapify_api_key: str | None = None
 
 
 @lru_cache

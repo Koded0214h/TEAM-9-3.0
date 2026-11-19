@@ -22,7 +22,12 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] User administration and four seeded platform roles
   - [x] Reusable server-side role dependencies
   - [x] Safe one-time system-administrator bootstrap command
-- [ ] Module 3 - Geography, polling units, dataset ingestion, and provenance
+- [x] Module 3 - Geography, polling units, dataset ingestion, and provenance
+  - [x] Versioned, classified datasets with activation and provenance metadata
+  - [x] CSV and GeoJSON validation with row-level errors and dry runs
+  - [x] State, LGA, ward, and registration-area hierarchy with PostGIS boundaries
+  - [x] Polling-unit storage, filtering, search, detail, GeoJSON, and proximity APIs
+  - [x] Coordinate-to-boundary resolution and spatial indexes
 - [ ] Module 4 - Scenario management and proposed polling-unit changes
 - [ ] Module 5 - Capacity and voter-load analysis
 - [ ] Module 6 - Voter-allocation engine contract and placeholder
