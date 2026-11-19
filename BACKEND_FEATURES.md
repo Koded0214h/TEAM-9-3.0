@@ -62,7 +62,11 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] Capacity and equipment metrics with rule/version explanations
   - [x] Algorithm-owned metrics returned only from successful runs
   - [x] Explicit `unavailable` values instead of fabricated estimates
-- [ ] Module 10 - Exports
+- [x] Module 10 - Exports
+  - [x] Authorized JSON scenario-review package
+  - [x] CSV before/after polling-unit allocation table
+  - [x] Dataset provenance, versions, assumptions, warnings, and generation metadata
+  - [x] Persisted export jobs with expiring authenticated downloads
 - [ ] Module 11 - Auditability, reliability, privacy, and security hardening
 
 ## 1. Backend scope and boundaries
