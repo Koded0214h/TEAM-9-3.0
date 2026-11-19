@@ -39,7 +39,11 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] Configurable underutilization threshold and transparent classification
   - [x] Effective-scenario load ratios and per-unit classifications
   - [x] Overloaded, underutilized, and within-capacity summary counts
-- [ ] Module 6 - Voter-allocation engine contract and placeholder
+- [x] Module 6 - Voter-allocation engine contract and placeholder
+  - [x] Versioned input/output contracts and immutable scenario snapshots
+  - [x] Replaceable `AllocationEngine` interface
+  - [x] Explicit deterministic stub with no fabricated recommendation
+  - [x] Persisted run lifecycle, retrieval, cancellation, and result selection guard
 - [ ] Module 7 - Equipment planning
 - [ ] Module 8 - Queue/capacity simulation contract and placeholder
 - [ ] Module 9 - Comparisons, metrics, and explanations
