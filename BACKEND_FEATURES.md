@@ -50,7 +50,12 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] Finite-stock allocation, shortage, surplus, and coverage data
   - [x] Scenario-pinned equipment plans and input snapshots
   - [x] Reason-required manual overrides preserving calculated values
-- [ ] Module 8 - Queue/capacity simulation contract and placeholder
+- [x] Module 8 - Queue/capacity simulation contract and placeholder
+  - [x] Versioned ward/global simulation assumptions
+  - [x] Immutable scenario, equipment, and assumption input snapshots
+  - [x] Replaceable `SimulationEngine` interface
+  - [x] Explicit stub that produces no fabricated queue estimates
+  - [x] Persisted simulation run lifecycle, retrieval, and cancellation
 - [ ] Module 9 - Comparisons, metrics, and explanations
 - [ ] Module 10 - Exports
 - [ ] Module 11 - Auditability, reliability, privacy, and security hardening
