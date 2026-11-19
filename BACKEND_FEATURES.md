@@ -16,7 +16,12 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] Liveness and database readiness endpoints
   - [x] Local PostGIS Docker Compose service
   - [x] Automated tests and lint configuration
-- [ ] Module 2 - Identity and access control
+- [x] Module 2 - Identity and access control
+  - [x] Local login, access tokens, refresh-token rotation, and logout/revocation
+  - [x] Secure Argon2 password hashing and inactive-user enforcement
+  - [x] User administration and four seeded platform roles
+  - [x] Reusable server-side role dependencies
+  - [x] Safe one-time system-administrator bootstrap command
 - [ ] Module 3 - Geography, polling units, dataset ingestion, and provenance
 - [ ] Module 4 - Scenario management and proposed polling-unit changes
 - [ ] Module 5 - Capacity and voter-load analysis
