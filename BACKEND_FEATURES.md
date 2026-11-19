@@ -56,7 +56,12 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] Replaceable `SimulationEngine` interface
   - [x] Explicit stub that produces no fabricated queue estimates
   - [x] Persisted simulation run lifecycle, retrieval, and cancellation
-- [ ] Module 9 - Comparisons, metrics, and explanations
+- [x] Module 9 - Comparisons, metrics, and explanations
+  - [x] Baseline-versus-scenario polling-unit change table
+  - [x] Added, relocated, deactivated, and unchanged summaries
+  - [x] Capacity and equipment metrics with rule/version explanations
+  - [x] Algorithm-owned metrics returned only from successful runs
+  - [x] Explicit `unavailable` values instead of fabricated estimates
 - [ ] Module 10 - Exports
 - [ ] Module 11 - Auditability, reliability, privacy, and security hardening
 
