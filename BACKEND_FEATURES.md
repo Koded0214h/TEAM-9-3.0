@@ -28,7 +28,12 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] State, LGA, ward, and registration-area hierarchy with PostGIS boundaries
   - [x] Polling-unit storage, filtering, search, detail, GeoJSON, and proximity APIs
   - [x] Coordinate-to-boundary resolution and spatial indexes
-- [ ] Module 4 - Scenario management and proposed polling-unit changes
+- [x] Module 4 - Scenario management and proposed polling-unit changes
+  - [x] Immutable baseline snapshots and effective scenario state
+  - [x] Scenario lifecycle, duplication, archive status, and soft deletion
+  - [x] Revision history and optimistic-concurrency conflict detection
+  - [x] Proposed new, relocated, and deactivated polling-unit overlays
+  - [x] Planning-boundary enforcement and reversible scenario changes
 - [ ] Module 5 - Capacity and voter-load analysis
 - [ ] Module 6 - Voter-allocation engine contract and placeholder
 - [ ] Module 7 - Equipment planning
