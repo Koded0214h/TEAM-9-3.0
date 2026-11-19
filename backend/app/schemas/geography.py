@@ -75,6 +75,7 @@ class PollingUnitResponse(BaseModel):
     address: str
     latitude: float
     longitude: float
+    coordinate_source: str
     ward_id: uuid.UUID
     registration_area_id: uuid.UUID | None
     status: str

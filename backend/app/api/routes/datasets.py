@@ -176,6 +176,7 @@ async def import_dataset(
                     address=row["address"].strip(),
                     latitude=latitude,
                     longitude=longitude,
+                    coordinate_source=(row.get("coordinate_source") or "imported").strip(),
                     registered_voters=int(row["registered_voters"]),
                     location=ST_SetSRID(
                         ST_GeomFromGeoJSON(

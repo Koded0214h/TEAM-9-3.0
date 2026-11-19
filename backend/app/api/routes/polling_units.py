@@ -87,6 +87,7 @@ def polling_units_geojson(
                     "code": unit.code,
                     "name": unit.name,
                     "status": unit.status,
+                    "coordinate_source": unit.coordinate_source,
                     "registered_voters": unit.registered_voters,
                 },
             )

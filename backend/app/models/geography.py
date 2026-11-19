@@ -136,6 +136,7 @@ class PollingUnit(Base):
     location = mapped_column(Geometry("POINT", srid=4326, spatial_index=True), nullable=False)
     latitude: Mapped[float] = mapped_column(Float)
     longitude: Mapped[float] = mapped_column(Float)
+    coordinate_source: Mapped[str] = mapped_column(String(40), default="imported")
     status: Mapped[str] = mapped_column(String(30), default="active", index=True)
     registered_voters: Mapped[int] = mapped_column(Integer, default=0)
 
