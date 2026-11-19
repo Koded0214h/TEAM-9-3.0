@@ -20,9 +20,9 @@ The backend stack is FastAPI, PostgreSQL, SQLAlchemy 2.x, Alembic, Pydantic, Red
 
 ### Batch 3 - Reconciliation and operations
 
-- [ ] Module 7 - Deterministic collation reconciliation engine
-- [ ] Module 8 - Discrepancy records and investigations
-- [ ] Module 9 - Monitoring dashboard, progress, and operational metrics
+- [x] Module 7 - Deterministic collation reconciliation engine
+- [x] Module 8 - Discrepancy records and investigations
+- [x] Module 9 - Monitoring dashboard, progress, and operational metrics
 
 ### Batch 4 - Evidence, external ingestion, and reporting
 

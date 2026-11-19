@@ -148,9 +148,14 @@ def create_submission(
     document = db.get(Document, payload.document_id)
     if not election or election.workspace_id != workspace_id or election.status != "active":
         raise AppError("invalid_election", "An active workspace election is required", 422)
-    if not contest or contest.election_id != election.id or contest.form_type != payload.form_type:
-        raise AppError("invalid_contest", "Contest or form type does not match", 422)
-    if not node or node.workspace_id != workspace_id or node.level != contest.geography_level:
+    form_levels = {"EC8A": "polling_unit", "EC8B": "ward", "EC8C": "lga", "EC8D": "state"}
+    if not contest or contest.election_id != election.id:
+        raise AppError("invalid_contest", "Contest does not match the election", 422)
+    if (
+        not node
+        or node.workspace_id != workspace_id
+        or node.level != form_levels[payload.form_type]
+    ):
         raise AppError(
             "invalid_geography", "Geography does not match the configured form level", 422
         )
@@ -186,8 +191,8 @@ def create_submission(
     snapshot = {
         "election": election.name,
         "contest": contest.name,
-        "form_type": contest.form_type,
-        "geography_level": contest.geography_level,
+        "form_type": payload.form_type,
+        "geography_level": node.level,
     }
     submission = ResultSubmission(
         workspace_id=workspace_id,
