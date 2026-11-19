@@ -6,10 +6,12 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import CurrentUser, require_roles
+from app.api.routes.capacity import effective_capacity_rule
 from app.core.errors import AppError
 from app.db.session import get_db
 from app.models.geography import DatasetVersion, PollingUnit, Ward
 from app.models.scenarios import Scenario, ScenarioPollingUnitChange, ScenarioRevision
+from app.schemas.capacity import LoadAnalysisResponse, PollingUnitLoad
 from app.schemas.scenarios import (
     EffectivePollingUnit,
     PollingUnitChangeCreate,
@@ -19,6 +21,7 @@ from app.schemas.scenarios import (
     ScenarioResponse,
     ScenarioUpdate,
 )
+from app.services.capacity import classify_load
 from app.services.scenarios import ensure_point_in_scenario, ensure_revision, record_revision
 
 router = APIRouter()
@@ -415,3 +418,45 @@ def effective_polling_units(
                 )
             )
     return result
+
+
+@router.get("/{scenario_id}/load-analysis", response_model=LoadAnalysisResponse)
+def load_analysis(
+    scenario_id: uuid.UUID, _: CurrentUser, db: Annotated[Session, Depends(get_db)]
+) -> LoadAnalysisResponse:
+    scenario = _scenario(db, scenario_id)
+    rule = effective_capacity_rule(db, scenario.planning_ward_id)
+    effective_units = effective_polling_units(scenario_id, _, db)
+    units = []
+    counts = {"overloaded": 0, "underutilized": 0, "within_capacity": 0}
+    for unit in effective_units:
+        if unit.status == "inactive":
+            continue
+        classification = classify_load(
+            unit.registered_voters,
+            target=rule.target_voters,
+            maximum=rule.maximum_voters,
+            underutilized_ratio=rule.underutilized_ratio,
+        )
+        counts[classification.label] += 1
+        units.append(
+            PollingUnitLoad(
+                polling_unit_id=unit.id,
+                code=unit.code,
+                name=unit.name,
+                registered_voters=unit.registered_voters,
+                target_voters=rule.target_voters,
+                maximum_voters=rule.maximum_voters,
+                load_ratio=classification.ratio,
+                classification=classification.label,
+                source=unit.source,
+            )
+        )
+    return LoadAnalysisResponse(
+        scenario_id=scenario.id,
+        rule=rule,
+        units=units,
+        overloaded_count=counts["overloaded"],
+        underutilized_count=counts["underutilized"],
+        within_capacity_count=counts["within_capacity"],
+    )

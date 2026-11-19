@@ -34,7 +34,11 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] Revision history and optimistic-concurrency conflict detection
   - [x] Proposed new, relocated, and deactivated polling-unit overlays
   - [x] Planning-boundary enforcement and reversible scenario changes
-- [ ] Module 5 - Capacity and voter-load analysis
+- [x] Module 5 - Capacity and voter-load analysis
+  - [x] Versioned global or ward-specific target and maximum-capacity rules
+  - [x] Configurable underutilization threshold and transparent classification
+  - [x] Effective-scenario load ratios and per-unit classifications
+  - [x] Overloaded, underutilized, and within-capacity summary counts
 - [ ] Module 6 - Voter-allocation engine contract and placeholder
 - [ ] Module 7 - Equipment planning
 - [ ] Module 8 - Queue/capacity simulation contract and placeholder
