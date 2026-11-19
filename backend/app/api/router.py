@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.routes.auth import router as auth_router
+from app.api.routes.compliance import router as compliance_router
 from app.api.routes.elections import router as election_router
 from app.api.routes.health import router as health_router
 from app.api.routes.reconciliation import router as reconciliation_router
@@ -14,3 +15,4 @@ api_router.include_router(workspace_router, tags=["workspaces"])
 api_router.include_router(election_router, tags=["elections"])
 api_router.include_router(result_router, tags=["results"])
 api_router.include_router(reconciliation_router, tags=["reconciliation"])
+api_router.include_router(compliance_router, tags=["compliance"])

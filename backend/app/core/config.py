@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     cloudinary_api_key: str | None = None
     cloudinary_api_secret: str | None = None
     max_document_bytes: int = 20 * 1024 * 1024
+    irev_enabled: bool = False
+    irev_provider_base_url: str | None = None
+    export_retention_days: int = 30
 
     @model_validator(mode="after")
     def validate_production(self):

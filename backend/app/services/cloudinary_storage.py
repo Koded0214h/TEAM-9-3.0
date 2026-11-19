@@ -10,7 +10,14 @@ import cloudinary.utils
 from app.core.config import get_settings
 from app.core.errors import AppError
 
-ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "application/pdf"}
+ALLOWED_TYPES = {
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf",
+    "text/csv",
+    "application/zip",
+}
 
 
 def configure_cloudinary() -> None:

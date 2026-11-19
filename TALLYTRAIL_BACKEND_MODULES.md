@@ -26,9 +26,9 @@ The backend stack is FastAPI, PostgreSQL, SQLAlchemy 2.x, Alembic, Pydantic, Red
 
 ### Batch 4 - Evidence, external ingestion, and reporting
 
-- [ ] Module 10 - Immutable audit trail and evidence integrity
-- [ ] Module 11 - Best-effort public IReV ingestion
-- [ ] Module 12 - Reconciliation reports and evidence exports
+- [x] Module 10 - Immutable audit trail and evidence integrity
+- [x] Module 11 - Best-effort public IReV ingestion
+- [x] Module 12 - Reconciliation reports and evidence exports
 
 ## Module 1 - Platform foundation
 

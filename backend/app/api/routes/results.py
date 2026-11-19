@@ -9,6 +9,7 @@ from app.api.dependencies import CurrentUser, require_geography_scope, require_w
 from app.core.config import get_settings
 from app.core.errors import AppError
 from app.db.session import get_db
+from app.models.compliance import EvidenceIntegrityCheck
 from app.models.elections import Candidate, Contest, Election
 from app.models.organisation import GeographyNode, Membership
 from app.models.results import Document, ResultFigure, ResultSubmission
@@ -95,6 +96,7 @@ def access_document(
 def verify_document_integrity(
     workspace_id: uuid.UUID,
     document_id: uuid.UUID,
+    user: CurrentUser,
     _: Annotated[
         Membership,
         Depends(
@@ -115,7 +117,16 @@ def verify_document_integrity(
     matches = observed == document.sha256
     if not matches:
         document.status = "quarantined"
-        db.commit()
+    db.add(
+        EvidenceIntegrityCheck(
+            document_id=document.id,
+            checked_by_id=user.id,
+            expected_sha256=document.sha256,
+            observed_sha256=observed,
+            matches=matches,
+        )
+    )
+    db.commit()
     return IntegrityResponse(
         document_id=document.id,
         expected_sha256=document.sha256,
