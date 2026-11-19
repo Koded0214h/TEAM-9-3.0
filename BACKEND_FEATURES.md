@@ -44,7 +44,12 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] Replaceable `AllocationEngine` interface
   - [x] Explicit deterministic stub with no fabricated recommendation
   - [x] Persisted run lifecycle, retrieval, cancellation, and result selection guard
-- [ ] Module 7 - Equipment planning
+- [x] Module 7 - Equipment planning
+  - [x] Equipment catalogue and versioned ward inventory snapshots
+  - [x] Configurable, versioned demand rules with transparent formulas
+  - [x] Finite-stock allocation, shortage, surplus, and coverage data
+  - [x] Scenario-pinned equipment plans and input snapshots
+  - [x] Reason-required manual overrides preserving calculated values
 - [ ] Module 8 - Queue/capacity simulation contract and placeholder
 - [ ] Module 9 - Comparisons, metrics, and explanations
 - [ ] Module 10 - Exports
