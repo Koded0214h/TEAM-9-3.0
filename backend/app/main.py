@@ -9,6 +9,7 @@ from app.core.config import get_settings
 from app.core.errors import register_exception_handlers
 from app.core.logging import configure_logging
 from app.middleware.request_id import RequestIDMiddleware
+from app.middleware.security import AuditMiddleware, RateLimitMiddleware, SecurityHeadersMiddleware
 
 
 @asynccontextmanager
@@ -34,6 +35,9 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     application.add_middleware(RequestIDMiddleware)
+    application.add_middleware(AuditMiddleware)
+    application.add_middleware(RateLimitMiddleware)
+    application.add_middleware(SecurityHeadersMiddleware)
     register_exception_handlers(application)
     application.include_router(api_router, prefix=settings.api_v1_prefix)
     return application

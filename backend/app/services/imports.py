@@ -14,6 +14,16 @@ POLLING_UNIT_FIELDS = {
     "longitude",
     "registered_voters",
 }
+FORBIDDEN_PERSONAL_FIELDS = {
+    "voter_name",
+    "first_name",
+    "last_name",
+    "date_of_birth",
+    "phone",
+    "email",
+    "vin",
+    "voter_id",
+}
 
 
 @dataclass
@@ -30,6 +40,23 @@ def validate_polling_unit_csv(content: bytes) -> ValidationResult:
     except UnicodeDecodeError:
         return ValidationResult([], [{"row": 0, "message": "File must be UTF-8 encoded"}], checksum)
     reader = csv.DictReader(io.StringIO(decoded))
+    personal_fields = FORBIDDEN_PERSONAL_FIELDS & {
+        field.lower() for field in reader.fieldnames or []
+    }
+    if personal_fields:
+        return ValidationResult(
+            [],
+            [
+                {
+                    "row": 1,
+                    "message": (
+                        "Individual voter fields are prohibited: "
+                        + ", ".join(sorted(personal_fields))
+                    ),
+                }
+            ],
+            checksum,
+        )
     missing = POLLING_UNIT_FIELDS - set(reader.fieldnames or [])
     if missing:
         return ValidationResult(

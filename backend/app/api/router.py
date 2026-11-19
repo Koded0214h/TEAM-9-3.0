@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.routes.allocation_runs import router as allocation_runs_router
+from app.api.routes.audit import router as audit_router
 from app.api.routes.auth import router as auth_router
 from app.api.routes.capacity import router as capacity_router
 from app.api.routes.comparisons import router as comparisons_router
@@ -17,6 +18,7 @@ from app.api.routes.users import router as users_router
 
 api_router = APIRouter()
 api_router.include_router(allocation_runs_router, tags=["allocation-runs"])
+api_router.include_router(audit_router, prefix="/audit-events", tags=["audit"])
 api_router.include_router(auth_router, prefix="/auth", tags=["authentication"])
 api_router.include_router(capacity_router, prefix="/capacity-rules", tags=["capacity"])
 api_router.include_router(comparisons_router, tags=["comparisons"])

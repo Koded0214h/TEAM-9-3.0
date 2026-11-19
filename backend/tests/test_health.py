@@ -25,6 +25,13 @@ def test_request_id_is_preserved(client: TestClient) -> None:
     assert response.headers["X-Request-ID"] == "test-request"
 
 
+def test_security_headers_are_added(client: TestClient) -> None:
+    response = client.get("/api/v1/health/live")
+    assert response.headers["X-Content-Type-Options"] == "nosniff"
+    assert response.headers["X-Frame-Options"] == "DENY"
+    assert response.headers["Cache-Control"] == "no-store"
+
+
 def test_not_found_uses_standard_error_envelope(client: TestClient) -> None:
     response = client.get("/api/v1/not-a-route")
 

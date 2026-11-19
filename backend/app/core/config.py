@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import AnyHttpUrl, Field
+from pydantic import AnyHttpUrl, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -28,6 +28,17 @@ class Settings(BaseSettings):
     bootstrap_admin_email: str | None = None
     bootstrap_admin_password: str | None = None
     geoapify_api_key: str | None = None
+
+    @model_validator(mode="after")
+    def validate_production_security(self):
+        if self.environment == "production":
+            if len(self.auth_secret_key) < 43 or "development" in self.auth_secret_key:
+                raise ValueError("Production AUTH_SECRET_KEY must be a unique high-entropy secret")
+            if self.debug:
+                raise ValueError("DEBUG must be false in production")
+            if not self.database_url.startswith(("postgresql+psycopg://", "postgresql://")):
+                raise ValueError("Production requires PostgreSQL")
+        return self
 
 
 @lru_cache

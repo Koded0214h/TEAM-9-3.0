@@ -67,7 +67,13 @@ This document isolates the backend work for the hackathon MVP. The intended stac
   - [x] CSV before/after polling-unit allocation table
   - [x] Dataset provenance, versions, assumptions, warnings, and generation metadata
   - [x] Persisted export jobs with expiring authenticated downloads
-- [ ] Module 11 - Auditability, reliability, privacy, and security hardening
+- [x] Module 11 - Auditability, reliability, privacy, and security hardening
+  - [x] Append-only audit events for every mutating HTTP operation
+  - [x] Authorized audit search by actor, entity, action, and time
+  - [x] Privacy-field rejection for voter-data imports
+  - [x] Rate limits on sensitive and expensive endpoint groups
+  - [x] Security headers and safe unexpected-error responses
+  - [x] Production secret, debug, and database configuration validation
 
 ## 1. Backend scope and boundaries
 

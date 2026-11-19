@@ -30,3 +30,12 @@ def test_valid_geojson() -> None:
     )
     assert len(result.rows) == 1
     assert result.errors == []
+
+
+def test_polling_unit_import_rejects_personal_voter_fields() -> None:
+    result = validate_polling_unit_csv(
+        b"code,name,address,ward_code,latitude,longitude,registered_voters,voter_name\n"
+        b"PU1,Alpha,Road,W1,6.5,3.4,100,Private Person\n"
+    )
+    assert result.rows == []
+    assert "prohibited" in result.errors[0]["message"]
