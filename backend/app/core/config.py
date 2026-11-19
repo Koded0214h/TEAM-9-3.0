@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     bootstrap_admin_email: str | None = None
     bootstrap_admin_password: str | None = None
+    cloudinary_cloud_name: str | None = None
+    cloudinary_api_key: str | None = None
+    cloudinary_api_secret: str | None = None
+    max_document_bytes: int = 20 * 1024 * 1024
 
     @model_validator(mode="after")
     def validate_production(self):

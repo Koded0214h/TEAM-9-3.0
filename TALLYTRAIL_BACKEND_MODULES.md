@@ -14,9 +14,9 @@ The backend stack is FastAPI, PostgreSQL, SQLAlchemy 2.x, Alembic, Pydantic, Red
 
 ### Batch 2 - Election configuration and result intake
 
-- [ ] Module 4 - Elections, contests, candidates, and monitored parties
-- [ ] Module 5 - Document storage, integrity, and versioning
-- [ ] Module 6 - Result submissions, figures, validation, and idempotency
+- [x] Module 4 - Elections, contests, candidates, and monitored parties
+- [x] Module 5 - Document storage, integrity, and versioning
+- [x] Module 6 - Result submissions, figures, validation, and idempotency
 
 ### Batch 3 - Reconciliation and operations
 
