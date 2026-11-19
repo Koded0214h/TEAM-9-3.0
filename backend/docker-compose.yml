@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: repelect
+      POSTGRES_USER: repelect
+      POSTGRES_PASSWORD: repelect
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U repelect -d repelect"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - repelect_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  repelect_postgres_data:
