@@ -1,31 +1,22 @@
-import logging
 from typing import Any
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-logger = logging.getLogger("repelect.errors")
-
 
 class AppError(Exception):
-    def __init__(
-        self,
-        *,
-        code: str,
-        message: str,
-        status_code: int = status.HTTP_400_BAD_REQUEST,
-        details: Any = None,
-    ) -> None:
-        self.code = code
-        self.message = message
-        self.status_code = status_code
-        self.details = details
-        super().__init__(message)
+    def __init__(self, code: str, message: str, status_code: int = 400, details: Any = None):
+        self.code, self.message, self.status_code, self.details = (
+            code,
+            message,
+            status_code,
+            details,
+        )
 
 
-def _payload(request: Request, code: str, message: str, details: Any = None) -> dict[str, Any]:
+def payload(request: Request, code: str, message: str, details: Any = None) -> dict:
     return {
         "error": {
             "code": code,
@@ -38,42 +29,22 @@ def _payload(request: Request, code: str, message: str, details: Any = None) -> 
 
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(AppError)
-    async def handle_app_error(request: Request, exc: AppError) -> JSONResponse:
+    async def app_error(request: Request, exc: AppError):
         return JSONResponse(
             status_code=exc.status_code,
-            content=_payload(request, exc.code, exc.message, exc.details),
+            content=payload(request, exc.code, exc.message, exc.details),
         )
 
     @app.exception_handler(RequestValidationError)
-    async def handle_validation_error(
-        request: Request, exc: RequestValidationError
-    ) -> JSONResponse:
+    async def validation_error(request: Request, exc: RequestValidationError):
         return JSONResponse(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            content=_payload(
-                request,
-                "validation_error",
-                "Request validation failed",
-                exc.errors(),
-            ),
+            status_code=422,
+            content=payload(request, "validation_error", "Request validation failed", exc.errors()),
         )
 
     @app.exception_handler(StarletteHTTPException)
-    async def handle_http_error(request: Request, exc: StarletteHTTPException) -> JSONResponse:
-        message = exc.detail if isinstance(exc.detail, str) else "HTTP request failed"
+    async def http_error(request: Request, exc: StarletteHTTPException):
         return JSONResponse(
             status_code=exc.status_code,
-            content=_payload(request, f"http_{exc.status_code}", message, exc.detail),
-        )
-
-    @app.exception_handler(Exception)
-    async def handle_unexpected_error(request: Request, exc: Exception) -> JSONResponse:
-        logger.exception("Unhandled application error", exc_info=exc)
-        return JSONResponse(
-            status_code=500,
-            content=_payload(
-                request,
-                "internal_server_error",
-                "An unexpected error occurred",
-            ),
+            content=payload(request, f"http_{exc.status_code}", str(exc.detail)),
         )

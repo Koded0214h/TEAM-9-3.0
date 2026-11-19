@@ -1,36 +1,27 @@
-# Repelect backend
-
-## Local setup
+# TallyTrail backend
 
 ```bash
 cp .env.example .env
-docker compose up -d db
+docker compose up -d
 uv sync --dev
 uv run alembic upgrade head
+uv run python -m app.scripts.bootstrap_admin
 uv run uvicorn app.main:app --reload
 ```
 
-The API documentation is available at `http://localhost:8000/docs`. Health endpoints are:
+Run background reconciliation, IReV adapter, and export jobs:
 
-- `GET /api/v1/health/live`
-- `GET /api/v1/health/ready`
+```bash
+uv run celery -A app.core.celery.celery_app worker --loglevel=INFO
+```
 
-Run checks with:
+Cloudinary objects use authenticated delivery and expiring signed access URLs. Automated IReV
+retrieval remains disabled until an approved public endpoint contract is configured; manual public
+document import remains available and is always labelled `public_irev`.
+
+Checks:
 
 ```bash
 uv run ruff check .
 uv run pytest
 ```
-
-## Production checklist
-
-- Set `ENVIRONMENT=production` and `DEBUG=false`.
-- Generate a unique high-entropy `AUTH_SECRET_KEY`; never reuse the development value.
-- Use a TLS-enabled managed PostgreSQL/PostGIS database and least-privilege credentials.
-- Restrict `FRONTEND_ORIGINS` to deployed frontend origins.
-- Put the API behind HTTPS and a trusted reverse proxy.
-- Replace the in-process rate limiter with Redis or gateway-level distributed limits when running multiple workers.
-- Move large export artifacts to private object storage with short-lived signed URLs.
-- Configure encrypted backups and test restoration.
-- Send structured logs to protected centralized storage and set retention rules for audit events and exports.
-- Restrict the Geoapify key by allowed APIs and rotate it if exposed.

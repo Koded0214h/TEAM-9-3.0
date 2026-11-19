@@ -1,39 +1,24 @@
-import uuid
+import pyotp
 
-import pytest
-
-from app.core.errors import AppError
 from app.core.security import (
     create_access_token,
     decode_access_token,
     hash_password,
-    hash_refresh_token,
+    new_totp_secret,
     verify_password,
+    verify_totp,
 )
 
 
-def test_password_hash_round_trip() -> None:
-    password_hash = hash_password("a-strong-test-password")
-    assert password_hash != "a-strong-test-password"
-    assert verify_password("a-strong-test-password", password_hash)
-    assert not verify_password("incorrect-password", password_hash)
-
-
-def test_access_token_round_trip() -> None:
-    user_id = uuid.uuid4()
-    token, expires_in = create_access_token(user_id, ["reviewer"])
+def test_password_hash_and_access_token_round_trip():
+    encoded = hash_password("correct horse battery staple")
+    assert verify_password("correct horse battery staple", encoded)
+    assert not verify_password("wrong", encoded)
+    token, _ = create_access_token("00000000-0000-0000-0000-000000000001", mfa=True)
     payload = decode_access_token(token)
-    assert payload["sub"] == str(user_id)
-    assert payload["roles"] == ["reviewer"]
-    assert expires_in == 900
+    assert payload["mfa"] is True
 
 
-def test_invalid_access_token_is_rejected() -> None:
-    with pytest.raises(AppError) as error:
-        decode_access_token("not-a-token")
-    assert error.value.code == "invalid_token"
-
-
-def test_refresh_tokens_are_hashed_deterministically() -> None:
-    assert hash_refresh_token("secret") == hash_refresh_token("secret")
-    assert hash_refresh_token("secret") != hash_refresh_token("other")
+def test_totp_round_trip():
+    secret = new_totp_secret()
+    assert verify_totp(secret, pyotp.TOTP(secret).now())

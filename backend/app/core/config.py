@@ -6,38 +6,41 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore",
-        case_sensitive=False,
-    )
-
-    app_name: str = "Repelect API"
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore", case_sensitive=False)
+    app_name: str = "TallyTrail API"
     environment: Literal["development", "test", "staging", "production"] = "development"
     debug: bool = False
     api_v1_prefix: str = "/api/v1"
-    database_url: str = "postgresql+psycopg://repelect:repelect@localhost:5432/repelect"
+    database_url: str = "postgresql+psycopg://tallytrail:tallytrail@localhost:5432/tallytrail"
+    redis_url: str = "redis://localhost:6379/0"
+    auth_secret_key: str = "development-only-secret-change-this"
+    access_token_minutes: int = 15
+    refresh_token_days: int = 7
+    totp_issuer: str = "TallyTrail"
     frontend_origins: list[AnyHttpUrl] = Field(
         default_factory=lambda: [AnyHttpUrl("http://localhost:3000")]
     )
-    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
-    auth_secret_key: str = "development-only-secret-change-me-now"
-    access_token_minutes: int = 15
-    refresh_token_days: int = 7
+    trusted_hosts: list[str] = Field(
+        default_factory=lambda: ["localhost", "127.0.0.1", "testserver"]
+    )
+    log_level: str = "INFO"
     bootstrap_admin_email: str | None = None
     bootstrap_admin_password: str | None = None
-    geoapify_api_key: str | None = None
+    cloudinary_cloud_name: str | None = None
+    cloudinary_api_key: str | None = None
+    cloudinary_api_secret: str | None = None
+    max_document_bytes: int = 20 * 1024 * 1024
+    irev_enabled: bool = False
+    irev_provider_base_url: str | None = None
+    export_retention_days: int = 30
 
     @model_validator(mode="after")
-    def validate_production_security(self):
+    def validate_production(self):
         if self.environment == "production":
             if len(self.auth_secret_key) < 43 or "development" in self.auth_secret_key:
-                raise ValueError("Production AUTH_SECRET_KEY must be a unique high-entropy secret")
+                raise ValueError("Production AUTH_SECRET_KEY must be high entropy")
             if self.debug:
                 raise ValueError("DEBUG must be false in production")
-            if not self.database_url.startswith(("postgresql+psycopg://", "postgresql://")):
-                raise ValueError("Production requires PostgreSQL")
         return self
 
 

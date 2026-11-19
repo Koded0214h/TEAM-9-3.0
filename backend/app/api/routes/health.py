@@ -10,12 +10,12 @@ from app.schemas.health import HealthResponse
 router = APIRouter()
 
 
-@router.get("/live", response_model=HealthResponse, summary="Liveness check")
-def liveness() -> HealthResponse:
+@router.get("/live", response_model=HealthResponse)
+def live() -> HealthResponse:
     return HealthResponse(status="ok")
 
 
-@router.get("/ready", response_model=HealthResponse, summary="Readiness check")
-def readiness(db: Annotated[Session, Depends(get_db)]) -> HealthResponse:
+@router.get("/ready", response_model=HealthResponse)
+def ready(db: Annotated[Session, Depends(get_db)]) -> HealthResponse:
     db.execute(text("SELECT 1"))
     return HealthResponse(status="ok")

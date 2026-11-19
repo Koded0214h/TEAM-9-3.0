@@ -1,1 +1,1 @@
-"""Application configuration and cross-cutting concerns."""
+"""Core application services."""

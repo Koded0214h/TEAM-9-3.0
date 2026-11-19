@@ -1,1 +1,1 @@
-"""Database setup."""
+"""Database package."""

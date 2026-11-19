@@ -3,44 +3,40 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 from app.api.router import api_router
 from app.core.config import get_settings
 from app.core.errors import register_exception_handlers
 from app.core.logging import configure_logging
+from app.middleware.audit import AuditMiddleware
 from app.middleware.request_id import RequestIDMiddleware
-from app.middleware.security import AuditMiddleware, RateLimitMiddleware, SecurityHeadersMiddleware
+from app.middleware.security import SecurityHeadersMiddleware
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    settings = get_settings()
-    configure_logging(settings.log_level)
+    configure_logging(get_settings().log_level)
     yield
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
-    application = FastAPI(
-        title=settings.app_name,
-        version="0.1.0",
-        debug=settings.debug,
-        lifespan=lifespan,
-    )
-    application.add_middleware(
+    app = FastAPI(title=settings.app_name, version="0.1.0", lifespan=lifespan)
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.trusted_hosts)
+    app.add_middleware(
         CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.frontend_origins],
+        allow_origins=[str(x) for x in settings.frontend_origins],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    application.add_middleware(RequestIDMiddleware)
-    application.add_middleware(AuditMiddleware)
-    application.add_middleware(RateLimitMiddleware)
-    application.add_middleware(SecurityHeadersMiddleware)
-    register_exception_handlers(application)
-    application.include_router(api_router, prefix=settings.api_v1_prefix)
-    return application
+    app.add_middleware(RequestIDMiddleware)
+    app.add_middleware(SecurityHeadersMiddleware)
+    app.add_middleware(AuditMiddleware)
+    register_exception_handlers(app)
+    app.include_router(api_router, prefix=settings.api_v1_prefix)
+    return app
 
 
 app = create_app()
